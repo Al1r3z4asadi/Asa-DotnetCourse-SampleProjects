@@ -8,5 +8,8 @@ namespace ASa.ApartmentManagement.Core.BaseInfo.DataGateways
     {
         IBuildingTableGateway CreateBuildingTableGateway();
         IApartmentTableGateway CreateIApartmentTableGateway();
+        IPersonTableGateway CreateIPersonTableGateway();
+        IExpenseTableGateway CreateIExpenseTableGateway();
+        IExpenseGroupTableGateway CreateIExpenseGroupTableGateway();
     }
 }

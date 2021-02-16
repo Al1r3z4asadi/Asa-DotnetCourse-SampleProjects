@@ -1,22 +1,23 @@
 ﻿using ASa.ApartmentManagement.Core.BaseInfo.DataGateways;
 using ASa.ApartmentManagement.Core.BaseInfo.DTOs;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Asa.ApartmentSystem.Infra.DataGateways
 {
-    public class BuildingTableGateway : IBuildingTableGateway
+    internal class PersonTableGateway : IPersonTableGateway
     {
-        string _connectionString;
-        public BuildingTableGateway(string connectionStrin)
+        private string _connectionString;
+
+        public PersonTableGateway(string connectionString)
         {
-            _connectionString = connectionStrin;
+            _connectionString = connectionString;
         }
 
-        public async Task<int> InsertBuildingAsync(BuildingDTO building)
+
+
+        public async Task<int> InsertPersonAsync(PersonDTO personDTO)
         {
             int id = 0;
             using (var connection = new SqlConnection(_connectionString))
@@ -25,8 +26,8 @@ namespace Asa.ApartmentSystem.Infra.DataGateways
                 {
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.CommandText = "[dbo].[buildings_create]";
-                    cmd.Parameters.AddWithValue("@name", building.Name);
-                    cmd.Parameters.AddWithValue("@number_of_units", building.NumberOfUnits);
+                    cmd.Parameters.AddWithValue("@full_name", personDTO.FullName);
+                    cmd.Parameters.AddWithValue("@phone_number", personDTO.PhoneNumber);
                     cmd.Connection = connection;
                     cmd.Connection.Open();
                     var result = await cmd.ExecuteScalarAsync();
@@ -35,5 +36,6 @@ namespace Asa.ApartmentSystem.Infra.DataGateways
             }
             return id;
         }
+
     }
 }

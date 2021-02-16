@@ -2,11 +2,8 @@
 using ASa.ApartmentManagement.Core.BaseInfo.DTOs;
 using System;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data.Common;
-using System.Data.Sql;
 using System.Threading.Tasks;
 using System.Data;
 
@@ -24,7 +21,7 @@ namespace Asa.ApartmentSystem.Infra.DataGateways
         public async Task<IEnumerable<ApartmentUnitDTO>> GetAllByBuildingId(int buildingId)
         {
             var result = new List<ApartmentUnitDTO>();
-
+            
             using (var connection = new SqlConnection(_connectionString))
             {
                 using (var cmd = new SqlCommand())
@@ -45,12 +42,12 @@ namespace Asa.ApartmentSystem.Infra.DataGateways
                             //unitDTO.Number= Convert.ToInt32(dataReader["number"]);
                             //unitDTO.Area= Convert.ToDecimal(dataReader["area"]);
                             //unitDTO.Description= Convert.ToString(dataReader["description"]);
-
+                                                        
                             unitDTO.BuidlingId = dataReader.Extract<int>("building_id");//== unitDTO.BuidlingId = Extensions.Extract<int>(dataReader,"building_id");
-                            unitDTO.Id = dataReader.Extract<int>("id");
-                            unitDTO.Number = dataReader.Extract<int>("number");
-                            unitDTO.Area = dataReader.Extract<decimal>("area");
-                            unitDTO.Description = dataReader.Extract<string>("description", () => "No description");
+                            unitDTO.Id= dataReader.Extract<int>("id");
+                            unitDTO.Number= dataReader.Extract<int>("number");
+                            unitDTO.Area= dataReader.Extract<decimal>("area");
+                            unitDTO.Description = dataReader.Extract<string>("description",()=>"No description");
                             result.Add(unitDTO);
                         }
                     }
@@ -58,6 +55,7 @@ namespace Asa.ApartmentSystem.Infra.DataGateways
             }
             return result;
         }
+
 
         public async Task<IEnumerable<OwnerTenantInfoDto>> GetAllOwnerTenant(int unitId)
         {
@@ -110,5 +108,30 @@ namespace Asa.ApartmentSystem.Infra.DataGateways
             //result.AddRange(items);
             return result;
         }
+
+        public async Task<int> InsertUnitAsync(ApartmentUnitDTO unit)
+        {
+            int id = 0;
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                using (var cmd = new SqlCommand())
+                {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.CommandText = "[dbo].[units_create]";
+                    cmd.Parameters.AddWithValue("@number", unit.Number);
+                    cmd.Parameters.AddWithValue("@buildingId", unit.BuidlingId);
+                    
+                    cmd.Parameters.AddWithValue("@area", unit.Area);
+                    cmd.Parameters.AddWithValue("@description", unit.Description);
+                    cmd.Connection = connection;
+                    cmd.Connection.Open();
+                    var result = await cmd.ExecuteScalarAsync();
+                    id = Convert.ToInt32(result);
+                }
+            }
+            return id;
+        }
     }
+    
 }
+
