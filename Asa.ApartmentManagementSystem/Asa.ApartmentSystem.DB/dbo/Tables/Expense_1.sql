@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[Expense] (
+﻿CREATE TABLE [dbo].[Expense] (
     [id]              INT           IDENTITY (1, 1) NOT NULL,
     [title]            NVARCHAR (50) NOT NULL,
     [category_id] int     NOT NULL,

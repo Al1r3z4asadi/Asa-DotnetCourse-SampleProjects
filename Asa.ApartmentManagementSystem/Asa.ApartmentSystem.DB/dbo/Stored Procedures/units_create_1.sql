@@ -20,8 +20,3 @@ AS
                 ,@description
             )
     Select SCOPE_IDENTITY()
-
-
-
-
-

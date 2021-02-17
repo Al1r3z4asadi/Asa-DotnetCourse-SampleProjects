@@ -15,10 +15,3 @@ AS
             @phone_number
         )
 Select SCOPE_IDENTITY()
-
-
-
-
-
-
-

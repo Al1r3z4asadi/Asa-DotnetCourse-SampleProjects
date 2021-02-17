@@ -10,5 +10,3 @@ INSERT INTO [dbo].[Building]
            (@name
            ,@number_of_units)
 select SCOPE_IDENTITY()
-
-
